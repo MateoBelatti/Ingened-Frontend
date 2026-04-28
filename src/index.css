@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  /* ── Paleta principal ── */
+  --beige:       #e8d8c9;
+  --beige-muted: rgba(232, 216, 201, 0.55);
+  --steel:       #4b607f;
+  --steel-dark:  #3a4d66;
+  --orange:      #f3701e;
+  --orange-dark: #d85e10;
+
+  /* ── Fondos ── */
+  --bg:      #131926;   /* negro azulado profundo */
+  --bg-soft: #1c2538;   /* panel del formulario */
+  --bg-card: #212d42;   /* inputs */
+
+  /* ── Tipografía ── */
+  --text:    var(--beige);
+  --text-h:  #f5ede4;
+  --text-dim: var(--beige-muted);
+
+  /* ── UI ── */
+  --border:       rgba(75, 96, 127, 0.4);
+  --border-focus: var(--steel);
+  --accent:       var(--orange);
+  --accent-dark:  var(--orange-dark);
+
+  --shadow:
+    rgba(0, 0, 0, 0.6) 0 20px 40px -10px,
+    rgba(0, 0, 0, 0.3) 0 4px 10px -2px;
+
+  font: 15px/150% 'DM Sans', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}

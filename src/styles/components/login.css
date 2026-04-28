@@ -1,0 +1,221 @@
+/* ── Tabs (Entrar / Registrarse) ── */
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.auth-tab {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  margin-right: 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.auth-tab.active {
+  color: var(--beige);
+}
+
+.auth-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--orange);
+  border-radius: 2px 2px 0 0;
+}
+
+/* ── Heading ── */
+.auth-title {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-size: 32px !important;
+  font-weight: 500 !important;
+  color: var(--text-h) !important;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px !important;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0 0 28px !important;
+  font-weight: 300;
+}
+
+/* ── Labels ── */
+.auth-label {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: var(--steel) !important;
+  margin-bottom: 6px !important;
+}
+
+/* ── Inputs ── */
+.auth-input {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--beige) !important;
+  font-size: 14px !important;
+  padding: 11px 14px !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.auth-input::placeholder {
+  color: rgba(232, 216, 201, 0.25) !important;
+}
+
+.auth-input:focus {
+  border-color: var(--steel) !important;
+  box-shadow: 0 0 0 3px rgba(75, 96, 127, 0.18) !important;
+  outline: none !important;
+  background: var(--bg-card) !important;
+}
+
+.auth-input.is-invalid {
+  border-color: #e05c5c !important;
+}
+
+/* ── Meta row (remember + forgot) ── */
+.auth-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.auth-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.auth-remember input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--orange);
+  cursor: pointer;
+}
+
+.auth-forgot {
+  font-size: 12px;
+  color: var(--steel);
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.auth-forgot:hover {
+  color: var(--beige);
+}
+
+/* ── Submit button ── */
+button.btn-dark,
+.auth-btn {
+  background: var(--orange) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+  padding: 12px !important;
+  transition: background 0.2s, transform 0.1s !important;
+}
+
+button.btn-dark:hover:not(:disabled),
+.auth-btn:hover:not(:disabled) {
+  background: var(--orange-dark) !important;
+  transform: translateY(-1px);
+}
+
+button.btn-dark:active,
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+button.btn-dark:disabled,
+.auth-btn:disabled {
+  opacity: 0.55 !important;
+}
+
+/* ── Social divider ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px;
+  color: var(--text-dim);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-social {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.auth-social a {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+  font-size: 15px;
+}
+
+.auth-social a:hover {
+  border-color: var(--steel);
+  color: var(--beige);
+}
+
+/* ── Alerts ── */
+.alert-success {
+  background: rgba(243, 112, 30, 0.12) !important;
+  border: 1px solid rgba(243, 112, 30, 0.3) !important;
+  color: var(--orange) !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+}
+
+.alert-danger {
+  background: rgba(224, 92, 92, 0.12) !important;
+  border: 1px solid rgba(224, 92, 92, 0.3) !important;
+  color: #e07070 !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+}

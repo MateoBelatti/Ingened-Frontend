@@ -1,0 +1,92 @@
+/* ── Auth Page – split layout ─────────────────────── */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: radial-gradient(ellipse at 30% 50%, #1e2d45 0%, var(--bg) 70%);
+}
+
+/* ── Card exterior ── */
+.auth-card {
+  width: 100%;
+  max-width: 860px;
+  min-height: 520px;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(75, 96, 127, 0.25),
+    var(--shadow);
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+/* ── Panel izquierdo (formulario) ── */
+.auth-form-panel {
+  flex: 0 0 52%;
+  background: var(--bg-soft);
+  padding: 48px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+/* ── Panel derecho (imagen) ── */
+.auth-image-panel {
+  flex: 1;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(19, 25, 38, 0.10) 0%,
+      rgba(19, 25, 38, 0.50) 100%
+    ),
+    url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px;
+}
+
+.auth-image-tagline {
+  color: rgba(232, 216, 201, 0.9);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+
+.auth-image-tagline span {
+  display: block;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 6px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 680px) {
+  .auth-card {
+    flex-direction: column;
+    max-width: 420px;
+    min-height: auto;
+  }
+  .auth-image-panel {
+    height: 180px;
+    padding: 20px;
+  }
+  .auth-form-panel {
+    padding: 32px 28px;
+  }
+}
