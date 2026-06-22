@@ -1,12 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { httpClient } from "./http.client";
 
 export const loginService = async (data: { email: string; password: string }) => {
-  const res = await fetch(`${API_URL}/api/auth  `, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error("Error en login");
-  
-  return res.json()  
+  try {
+    const res = await httpClient.post("/api/Auth/login", data);
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || "Error en login");
+  }
 };
