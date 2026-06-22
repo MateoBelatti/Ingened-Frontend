@@ -15,7 +15,7 @@ const HomePage: React.FC = () => {
         }
     }, [auth.isAuthenticated, nav]);
 
-    console.log(auth.user);
+
     
     return (
     <div className="home-wrapper container-fluid">

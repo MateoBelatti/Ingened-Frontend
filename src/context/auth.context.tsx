@@ -12,9 +12,17 @@ export const useAuth = () => {
 }
 
 const decodeJwt = (token: string): JwtPayload | null => {
-    const payload = token.split('.')[1];
-    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decoded);
+    try {
+        if (!token) return null;
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+        const payload = parts[1];
+        const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        return JSON.parse(decoded);
+    } catch (error) {
+        console.error("Error al decodificar JWT:", error);
+        return null;
+    }
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
