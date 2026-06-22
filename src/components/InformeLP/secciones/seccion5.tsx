@@ -1,34 +1,17 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Row, Col, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface ParametrosLPData {
-  tipoPenetrante: string;
-  tipoRevelador: string;
-  tipoRemovedor: string;
-  extensionEnsayo: string;
-  limpiezaInicial: string;
-  aplicacionPenetrante: string;
-  tiempoPenetracion: string;
-  remocionExceso: string;
-  tiempoSecado: string;
-  aplicacionRevelador: string;
-  tiempoRevelado: string;
-  limpiezaPostExamen: string;
-  temperatura: string;
-  iluminacion: string;
-}
+import type { ParametrosLPDto } from "../../../types/informe.types";
 
 interface ParametrosLPProps {
-  data: ParametrosLPData;
-  setData: React.Dispatch<React.SetStateAction<ParametrosLPData>>;
-  B: string;
-  DARK: string;
+  data: ParametrosLPDto;
+  setData: React.Dispatch<React.SetStateAction<ParametrosLPDto>>;
 }
 
 // Tipado de los fields
 type Field = {
-  name: keyof ParametrosLPData;
+  name: keyof ParametrosLPDto;
   label: string;
   type?: string;
 };
@@ -37,8 +20,6 @@ type Field = {
 export const ParametrosLP: React.FC<ParametrosLPProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>
@@ -47,7 +28,7 @@ export const ParametrosLP: React.FC<ParametrosLPProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof ParametrosLPData]: value,
+      [name as keyof ParametrosLPDto]: value,
     }));
   };
 

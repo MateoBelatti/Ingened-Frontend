@@ -1,30 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Lbl, Txt } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export type ResultadoGlobalType =
-  | "aceptable"
-  | "aceptableConIndicaciones"
-  | "noAceptable";
-
-export interface ResultadoGlobalData {
-  resultadoGlobal: ResultadoGlobalType;
-  observacionesGenerales: string;
-}
+import type { ResultadoGlobalDataDto } from "../../../types/informe.types";
 
 interface ResultadoGlobalProps {
-  data: ResultadoGlobalData;
-  setData: React.Dispatch<React.SetStateAction<ResultadoGlobalData>>;
-  B: string;
-  DARK: string;
+  data: ResultadoGlobalDataDto;
+  setData: React.Dispatch<React.SetStateAction<ResultadoGlobalDataDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const ResultadoGlobal: React.FC<ResultadoGlobalProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,11 +21,11 @@ export const ResultadoGlobal: React.FC<ResultadoGlobalProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof ResultadoGlobalData]: value,
+      [name as keyof ResultadoGlobalDataDto]: value,
     }));
   };
 
-  const opts: { val: ResultadoGlobalType; label: string }[] = [
+  const opts: { val: string; label: string }[] = [
     { val: "aceptable", label: "Aceptable" },
     {
       val: "aceptableConIndicaciones",

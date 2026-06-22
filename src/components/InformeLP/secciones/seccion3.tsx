@@ -1,28 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Row, Col, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface ProcedimientoNormasData {
-  procGeneral: string;
-  procEspecifico: string;
-  ensayoTipo: string;
-  norma: string;
-  codigoRef: string;
-}
+import type { ProcedimientoNormasDto } from "../../../types/informe.types";
 
 interface ProcedimientoNormasProps {
-  data: ProcedimientoNormasData;
-  setData: React.Dispatch<React.SetStateAction<ProcedimientoNormasData>>;
-  B: string;
-  DARK: string;
+  data: ProcedimientoNormasDto;
+  setData: React.Dispatch<React.SetStateAction<ProcedimientoNormasDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const ProcedimientoNormas: React.FC<ProcedimientoNormasProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>
@@ -31,7 +21,7 @@ export const ProcedimientoNormas: React.FC<ProcedimientoNormasProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof ProcedimientoNormasData]: value,
+      [name as keyof ProcedimientoNormasDto]: value,
     }));
   };
 

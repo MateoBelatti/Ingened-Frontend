@@ -1,34 +1,20 @@
 import React from "react";
 import { SCard, Inp, Sel } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export type ResultadoType = "Aprobado" | "Rechazado" | "N/A";
-
-export interface ElementoInspeccionado {
-  linea: string;
-  isometrico: string;
-  elemento: string;
-  spool: string;
-  cuno: string;
-  espSch: string;
-  diam: string;
-  criterio: string;
-  resultado: ResultadoType;
-}
+import type { ElementoInspeccionadoDto } from "../../../types/informe.types";
 
 export interface ElementosData {
-  elementos: ElementoInspeccionado[];
+  elementos: ElementoInspeccionadoDto[];
 }
 
 interface ElementosInspeccionadosProps {
   data: ElementosData;
   setData: React.Dispatch<React.SetStateAction<ElementosData>>;
-  B: string;
-  DARK: string;
 }
 
 // Columnas tipadas
-type ColKey = keyof ElementoInspeccionado;
+type ColKey = keyof ElementoInspeccionadoDto;
 
 interface Column {
   key: ColKey;
@@ -40,8 +26,6 @@ interface Column {
 export const ElementosInspeccionados: React.FC<ElementosInspeccionadosProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const COLS: Column[] = [
     { key: "linea", label: "Línea", w: 60 },
@@ -56,7 +40,7 @@ export const ElementosInspeccionados: React.FC<ElementosInspeccionadosProps> = (
   ];
 
   const addRow = () => {
-    const newRow: ElementoInspeccionado = {
+    const newRow: ElementoInspeccionadoDto = {
       linea: "",
       isometrico: "",
       elemento: "",

@@ -2,90 +2,38 @@ import React, { useState, useEffect } from "react";
 import '../styles/pages/informeLP.css';
 
 // ─── SECCIONES ────────────────────────────────────────────────────
-import { DatosArchivo, type DatosArchivoData } from "../components/InformeLP/secciones/seccion1";
-import { DatosGenerales, type DatosGeneralesData } from "../components/InformeLP/secciones/seccion2";
-import { ProcedimientoNormas, type ProcedimientoNormasData } from "../components/InformeLP/secciones/seccion3";
-import { MaterialSuperficie, type MaterialSuperficieData } from "../components/InformeLP/secciones/seccion4";
-import { ParametrosLP, type ParametrosLPData } from "../components/InformeLP/secciones/seccion5";
-import { ElementosInspeccionados, type ElementosData } from "../components/InformeLP/secciones/seccion6";
-import { ResultadoVisual, type ResultadoVisualData,  } from "../components/InformeLP/secciones/seccion7";
-import { Responsables, type ResponsablesData } from "../components/InformeLP/secciones/seccion9";
-import { Consumibles, type ConsumiblesData } from "../components/InformeLP/secciones/seccion10";
-import { RegistroFotografico, type RegistroFotograficoData } from "../components/InformeLP/secciones/seccion11";
-import { ResultadoGlobal, type ResultadoGlobalData } from "../components/InformeLP/secciones/seccion8";
-
-
+import { DatosArchivo } from "../components/InformeLP/secciones/seccion1";
+import { DatosGenerales } from "../components/InformeLP/secciones/seccion2";
+import { ProcedimientoNormas } from "../components/InformeLP/secciones/seccion3";
+import { MaterialSuperficie } from "../components/InformeLP/secciones/seccion4";
+import { ParametrosLP } from "../components/InformeLP/secciones/seccion5";
+import { ElementosInspeccionados } from "../components/InformeLP/secciones/seccion6";
+import { ResultadoVisual } from "../components/InformeLP/secciones/seccion7";
+import { Responsables } from "../components/InformeLP/secciones/seccion9";
+import { Consumibles } from "../components/InformeLP/secciones/seccion10";
+import { RegistroFotografico } from "../components/InformeLP/secciones/seccion11";
+import { ResultadoGlobal } from "../components/InformeLP/secciones/seccion8";
+import type { InformeDTO } from "../types/informe.types";
+import { INIT, SECTION_NAMES } from "../components/InformeLP/constantes";
 
 import { useAuth } from '../context/auth.context';
 import { generarInforme } from '../service/informe.service';
 
-// ─── CONSTANTES ───────────────────────────────────────────────────
-const B = "#E07B2A";
-const DARK = "#1B2A3B";
-
-const SECTION_NAMES = [
-  "Datos de Archivo",
-  "Datos Generales",
-  "Procedimiento / Normas",
-  "Material / Superficie",
-  "Parámetros LP",
-  "Elementos",
-  "Resultado Visual",
-  "Resultado Global",
-  "Responsables",
-  "Consumibles",
-  "Registro Fotográfico",
-];
-
-// ─── TIPOS ────────────────────────────────────────────────────────
-type FormData =
-  & DatosArchivoData
-  & DatosGeneralesData
-  & ProcedimientoNormasData
-  & MaterialSuperficieData
-  & ParametrosLPData
-  & ElementosData
-  & ResultadoVisualData
-  & ResultadoGlobalData
-  & ResponsablesData
-  & ConsumiblesData
-  & RegistroFotograficoData;
-
-// ─── ESTADO INICIAL ───────────────────────────────────────────────
-const INIT: FormData = {
-  nrInf: "", cliente: "", oc: "", rev: "", fecha: "", codigo: "",
-  proyecto: "", componente: "", subconjunto: "", obra: "", plano: "",
-  posicion: "", lugar: "",
-  procGeneral: "", procEspecifico: "", ensayoTipo: "", norma: "", codigoRef: "",
-  material: "", formaMaterial: "", condSuperficiales: "",
-  tipoPenetrante: "", tipoRevelador: "", tipoRemovedor: "",
-  extensionEnsayo: "", limpiezaInicial: "", aplicacionPenetrante: "",
-  tiempoPenetracion: "", remocionExceso: "", tiempoSecado: "",
-  aplicacionRevelador: "", tiempoRevelado: "", limpiezaPostExamen: "",
-  temperatura: "", iluminacion: "",
-  elementos: [{ linea: "", isometrico: "", elemento: "", spool: "", cuno: "", espSch: "", diam: "", criterio: "", resultado: "Aprobado" }],
-  resultadoVisual: "aceptable", observaciones: "",
-  resultadoGlobal: "aceptable", observacionesGenerales: "",
-  realizo: "", firmaRealizo: "", reviso: "", firmaReviso: "",
-  consumibles: [{ producto: "", lote: "", marca: "", vencimiento: "" }],
-  fotos: [],
-};
-
-
-// --- HOLMET ------------------------
-function createSectionSetter<T>(
-  setData: React.Dispatch<React.SetStateAction<FormData>>
-): React.Dispatch<React.SetStateAction<T>> {
-  return (value) => {
+function createSectionSetter<K extends keyof InformeDTO>(
+  setData: React.Dispatch<React.SetStateAction<InformeDTO>>,
+  sectionKey: K
+) {
+  return (value: any) => {
     setData((prev) => {
+      const sectionValue = prev[sectionKey];
       const newValue =
         typeof value === "function"
-          ? (value as (prev: T) => T)(prev as unknown as T)
+          ? value(sectionValue)
           : value;
 
       return {
         ...prev,
-        ...newValue,
+        [sectionKey]: newValue,
       };
     });
   };
@@ -93,7 +41,7 @@ function createSectionSetter<T>(
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 const InformeLP: React.FC = () => {
-  const [data, setData] = useState<FormData>(INIT);
+  const [data, setData] = useState<InformeDTO>(INIT);
   const [step, setStep] = useState<number>(0);
   const [mobile, setMobile] = useState<boolean>(window.innerWidth < 768);
   const { token } = useAuth();
@@ -108,42 +56,46 @@ const InformeLP: React.FC = () => {
     return () => window.removeEventListener("resize", h);
   }, []);
 
-  const props = { data, B, DARK };
-
   const sections = [
     <DatosArchivo 
-      {...props}
-      setData={createSectionSetter<DatosArchivoData>(setData)}  />,
+      data={data.datosArchivos}
+      setData={createSectionSetter(setData, 'datosArchivos')}  />,
     <DatosGenerales
-      {...props}
-        setData={createSectionSetter<DatosGeneralesData>(setData)}/>,
+      data={data.datosGenerales}
+      setData={createSectionSetter(setData, 'datosGenerales')}/>,
     <ProcedimientoNormas
-      {...props}
-      setData={createSectionSetter<ProcedimientoNormasData>(setData)}/>,
+      data={data.procedimientoNormas}
+      setData={createSectionSetter(setData, 'procedimientoNormas')}/>,
     <MaterialSuperficie
-      {...props}
-      setData={createSectionSetter<MaterialSuperficieData>(setData)}/>,
+      data={data.materialSuperficial}
+      setData={createSectionSetter(setData, 'materialSuperficial')}/>,
     <ParametrosLP 
-      {...props}
-      setData={createSectionSetter<ParametrosLPData>(setData)}/>,
+      data={data.parametrosLP}
+      setData={createSectionSetter(setData, 'parametrosLP')}/>,
     <ElementosInspeccionados
-      {...props}
-      setData={createSectionSetter<ElementosData>(setData)}/>,
-      <ResultadoVisual 
-      {...props}
-      setData={createSectionSetter<ResultadoVisualData>(setData)}/>,
-      <ResultadoGlobal 
-      {...props}
-      setData={createSectionSetter<ResultadoGlobalData>(setData)}/>,
+      data={{ elementos: data.elementos }}
+      setData={(val: any) => {
+        const newVal = typeof val === "function" ? val({ elementos: data.elementos }) : val;
+        setData(prev => ({ ...prev, elementos: newVal.elementos }));
+      }}/>,
+    <ResultadoVisual 
+      data={data.resultadoVisual!}
+      setData={createSectionSetter(setData, 'resultadoVisual')}/>,
+    <ResultadoGlobal 
+      data={data.resultadoGlobal}
+      setData={createSectionSetter(setData, 'resultadoGlobal')}/>,
     <Responsables 
-      {...props}
-      setData={createSectionSetter<ResponsablesData>(setData)}/>,
+      data={data.responsables}
+      setData={createSectionSetter(setData, 'responsables')}/>,
     <Consumibles 
-      {...props}
-      setData={createSectionSetter<ConsumiblesData>(setData)}/>,
+      data={{ consumibles: data.consumibles }}
+      setData={(val: any) => {
+        const newVal = typeof val === "function" ? val({ consumibles: data.consumibles }) : val;
+        setData(prev => ({ ...prev, consumibles: newVal.consumibles }));
+      }}/>,
     <RegistroFotografico
-      {...props}
-      setData={createSectionSetter<RegistroFotograficoData>(setData)}/>,
+      data={data.registroFotografico!}
+      setData={createSectionSetter(setData, 'registroFotografico')}/>,
   ];
 
   const handleGenerate = async () => {

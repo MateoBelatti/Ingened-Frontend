@@ -1,30 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Row, Col, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface DatosGeneralesData {
-  proyecto: string;
-  componente: string;
-  subconjunto: string;
-  obra: string;
-  plano: string;
-  posicion: string;
-  lugar: string;
-}
+import type { DatosGeneralesDto } from "../../../types/informe.types";
 
 interface DatosGeneralesProps {
-  data: DatosGeneralesData;
-  setData: React.Dispatch<React.SetStateAction<DatosGeneralesData>>;
-  B: string;
-  DARK: string;
+  data: DatosGeneralesDto;
+  setData: React.Dispatch<React.SetStateAction<DatosGeneralesDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const DatosGenerales: React.FC<DatosGeneralesProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>
@@ -33,7 +21,7 @@ export const DatosGenerales: React.FC<DatosGeneralesProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof DatosGeneralesData]: value,
+      [name as keyof DatosGeneralesDto]: value,
     }));
   };
 

@@ -1,29 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Row, Col, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface DatosArchivoData {
-  nrInf: string;
-  cliente: string;
-  oc: string;
-  rev: string;
-  fecha: string;
-  codigo: string;
-}
+import type { DatosArchivosDto } from "../../../types/informe.types";
 
 interface DatosArchivoProps {
-  data: DatosArchivoData;
-  setData: React.Dispatch<React.SetStateAction<DatosArchivoData>>;
-  B: string;
-  DARK: string;
+  data: DatosArchivosDto;
+  setData: React.Dispatch<React.SetStateAction<DatosArchivosDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const DatosArchivo: React.FC<DatosArchivoProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>

@@ -1,57 +1,25 @@
 import React, { type ChangeEvent } from "react";
 import { SCard } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface Foto {
-  name: string;
-  url: string; // base64
-}
-
-export interface RegistroFotograficoData {
-  fotos: Foto[];
-}
+import type { RegistroFotograficoDataDto } from "../../../types/informe.types";
 
 interface RegistroFotograficoProps {
-  data: RegistroFotograficoData;
-  setData: React.Dispatch<React.SetStateAction<RegistroFotograficoData>>;
-  B: string;
-  DARK: string;
+  data: RegistroFotograficoDataDto;
+  setData: React.Dispatch<React.SetStateAction<RegistroFotograficoDataDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const RegistroFotografico: React.FC<RegistroFotograficoProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-
-    Promise.all(
-      files.map(
-        (f) =>
-          new Promise<Foto>((resolve) => {
-            const reader = new FileReader();
-
-            reader.onload = (ev) => {
-              resolve({
-                name: f.name,
-                url: ev.target?.result as string,
-              });
-            };
-
-            reader.readAsDataURL(f);
-          })
-      )
-    ).then((imgs) => {
-      setData((prev) => ({
-        ...prev,
-        fotos: [...prev.fotos, ...imgs],
-      }));
-    });
-
-    // reset input
+    setData((prev) => ({
+      ...prev,
+      fotos: [...prev.fotos, ...files],
+    }));
     e.target.value = "";
   };
 
@@ -130,7 +98,7 @@ export const RegistroFotografico: React.FC<RegistroFotograficoProps> = ({
               }}
             >
               <img
-                src={f.url}
+                src={URL.createObjectURL(f)}
                 alt={f.name}
                 style={{
                   width: "100%",

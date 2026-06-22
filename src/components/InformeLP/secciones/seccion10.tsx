@@ -1,40 +1,32 @@
 import React from "react";
 import { SCard, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface Consumible {
-  producto: string;
-  lote: string;
-  marca: string;
-  vencimiento: string;
-}
+import type { ConsumibleDto } from "../../../types/informe.types";
 
 export interface ConsumiblesData {
-  consumibles: Consumible[];
+  consumibles: ConsumibleDto[];
 }
 
 interface ConsumiblesProps {
   data: ConsumiblesData;
   setData: React.Dispatch<React.SetStateAction<ConsumiblesData>>;
-  B: string;
-  DARK: string;
 }
 
-type ConsumibleKey = keyof Consumible;
+type ConsumibleKey = keyof ConsumibleDto;
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const Consumibles: React.FC<ConsumiblesProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const addRow = () => {
-    const newRow: Consumible = {
+    const newRow: ConsumibleDto = {
       producto: "",
       lote: "",
       marca: "",
       vencimiento: "",
+      imagenes: []
     };
 
     setData((prev) => ({
@@ -57,7 +49,16 @@ export const Consumibles: React.FC<ConsumiblesProps> = ({
   ) => {
     setData((prev) => {
       const rows = [...prev.consumibles];
-      rows[i] = { ...rows[i], [key]: value };
+      (rows[i] as any)[key] = value;
+      return { ...prev, consumibles: rows };
+    });
+  };
+
+  const handleFileChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setData((prev) => {
+      const rows = [...prev.consumibles];
+      rows[i] = { ...rows[i], imagenes: files };
       return { ...prev, consumibles: rows };
     });
   };
@@ -71,7 +72,7 @@ export const Consumibles: React.FC<ConsumiblesProps> = ({
         >
           <thead>
             <tr style={{ background: "#f1f3f5" }}>
-              {["Producto", "Lote", "Marca", "Vencimiento"].map(
+              {["Producto", "Lote", "Marca", "Venc.", "Fotos"].map(
                 (c) => (
                   <th
                     key={c}
@@ -128,15 +129,25 @@ export const Consumibles: React.FC<ConsumiblesProps> = ({
                   <Inp
                     name="vencimiento"
                     value={row.vencimiento}
-                    type="date"
                     onChange={(e: { target: { value: string; }; }) =>
-                      handleCellChange(
-                        i,
-                        "vencimiento",
-                        e.target.value
-                      )
+                      handleCellChange(i, "vencimiento", e.target.value)
                     }
                   />
+                </td>
+
+                <td style={{ padding: "0.2rem 0.25rem" }}>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(i, e)}
+                    style={{ fontSize: "0.75rem", width: "100%", padding: "0.15rem" }}
+                  />
+                  {row.imagenes && row.imagenes.length > 0 && (
+                    <div style={{ fontSize: "0.65rem", color: DARK }}>
+                      {row.imagenes.length} archivo(s)
+                    </div>
+                  )}
                 </td>
 
                 <td

@@ -1,26 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Row, Col, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface MaterialSuperficieData {
-  material: string;
-  formaMaterial: string;
-  condSuperficiales: string;
-}
+import type { MaterialSuperficialDto } from "../../../types/informe.types";
 
 interface MaterialSuperficieProps {
-  data: MaterialSuperficieData;
-  setData: React.Dispatch<React.SetStateAction<MaterialSuperficieData>>;
-  B: string;
-  DARK: string;
+  data: MaterialSuperficialDto;
+  setData: React.Dispatch<React.SetStateAction<MaterialSuperficialDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const MaterialSuperficie: React.FC<MaterialSuperficieProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>
@@ -29,7 +21,7 @@ export const MaterialSuperficie: React.FC<MaterialSuperficieProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof MaterialSuperficieData]: value,
+      [name as keyof MaterialSuperficialDto]: value,
     }));
   };
 

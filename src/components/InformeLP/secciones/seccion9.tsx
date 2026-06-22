@@ -1,27 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Row, Col, Inp } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export interface ResponsablesData {
-  realizo: string;
-  firmaRealizo: string;
-  reviso: string;
-  firmaReviso: string;
-}
+import type { ResponsablesDataDto } from "../../../types/informe.types";
 
 interface ResponsablesProps {
-  data: ResponsablesData;
-  setData: React.Dispatch<React.SetStateAction<ResponsablesData>>;
-  B: string;
-  DARK: string;
+  data: ResponsablesDataDto;
+  setData: React.Dispatch<React.SetStateAction<ResponsablesDataDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const Responsables: React.FC<ResponsablesProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>
@@ -30,7 +21,7 @@ export const Responsables: React.FC<ResponsablesProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof ResponsablesData]: value,
+      [name as keyof ResponsablesDataDto]: value,
     }));
   };
 

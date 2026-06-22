@@ -1,30 +1,18 @@
 import React, { type ChangeEvent } from "react";
 import { SCard, Lbl, Txt } from "../primitivos"; // ajustá el path
+import { B, DARK } from "../constantes";
 
-// ─── TYPES ────────────────────────────────────────────────────────
-export type ResultadoVisualType =
-  | "aceptable"
-  | "aceptableConIndicaciones"
-  | "noAceptable";
-
-export interface ResultadoVisualData {
-  resultadoVisual: ResultadoVisualType;
-  observaciones: string;
-}
+import type { ResultadoVisualDataDto } from "../../../types/informe.types";
 
 interface ResultadoVisualProps {
-  data: ResultadoVisualData;
-  setData: React.Dispatch<React.SetStateAction<ResultadoVisualData>>;
-  B: string;
-  DARK: string;
+  data: ResultadoVisualDataDto;
+  setData: React.Dispatch<React.SetStateAction<ResultadoVisualDataDto>>;
 }
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 export const ResultadoVisual: React.FC<ResultadoVisualProps> = ({
   data,
   setData,
-  B,
-  DARK,
 }) => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,11 +21,11 @@ export const ResultadoVisual: React.FC<ResultadoVisualProps> = ({
 
     setData((prev) => ({
       ...prev,
-      [name as keyof ResultadoVisualData]: value,
+      [name as keyof ResultadoVisualDataDto]: value,
     }));
   };
 
-  const opts: { val: ResultadoVisualType; label: string }[] = [
+  const opts: { val: string; label: string }[] = [
     { val: "aceptable", label: "Aceptable" },
     {
       val: "aceptableConIndicaciones",
