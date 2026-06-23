@@ -59,3 +59,29 @@ export const generarInforme = async (
     throw new Error(error.response?.data?.message || 'Error al generar el informe');
   }
 };
+
+export const getAllInformes = async (token: string): Promise<InformeBackendData[]> => {
+  try {
+    const res = await httpClient.get('/api/Informe', {
+      headers: { 
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Error al obtener los informes');
+  }
+};
+
+export const getInformeById = async (id: number, token: string): Promise<InformeBackendData> => {
+  try {
+    const res = await httpClient.get(`/api/Informe/${id}`, {
+      headers: { 
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Error al obtener el informe');
+  }
+};
