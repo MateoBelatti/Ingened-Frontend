@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import '../styles/pages/informeLP.css';
 
 // ─── SECCIONES ────────────────────────────────────────────────────
@@ -15,9 +16,11 @@ import { RegistroFotografico } from "../components/InformeLP/secciones/seccion11
 import { ResultadoGlobal } from "../components/InformeLP/secciones/seccion8";
 import type { InformeDTO } from "../types/informe.types";
 import { INIT, SECTION_NAMES } from "../components/InformeLP/constantes";
+import { SuccessModal } from "../components/common/SuccessModal";
 
 import { useAuth } from '../context/auth.context';
 import { generarInforme } from '../service/informe.service';
+import type { InformeResult } from '../service/informe.service';
 
 function createSectionSetter<K extends keyof InformeDTO>(
   setData: React.Dispatch<React.SetStateAction<InformeDTO>>,
@@ -41,12 +44,13 @@ function createSectionSetter<K extends keyof InformeDTO>(
 
 // ─── COMPONENT ────────────────────────────────────────────────────
 const InformeLP: React.FC = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<InformeDTO>(INIT);
   const [step, setStep] = useState<number>(0);
   const [mobile, setMobile] = useState<boolean>(window.innerWidth < 768);
   const { token } = useAuth();
   const [loading,   setLoading]   = useState(false);
-  const [driveLink, setDriveLink] = useState<string | null>(null);
+  const [resultData, setResultData] = useState<InformeResult | null>(null);
   const [error,     setError]     = useState<string | null>(null);
 
   // Resize listener
@@ -106,15 +110,20 @@ const InformeLP: React.FC = () => {
   try {
     setLoading(true);
     setError(null);
-    setDriveLink(null);
+    setResultData(null);
     const result = await generarInforme(data, token);
-    setDriveLink(result.link);
+    setResultData(result);
   } catch (err) {
     setError(err instanceof Error ? err.message : 'Error al generar el informe');
   } finally {
     setLoading(false);
   }
 };
+
+  const handleCloseModal = () => {
+    setResultData(null);
+    navigate('/home');
+  };
 
   // ── HEADER (compartido) ─────────────────────────────────────────
   const Header= () => (
@@ -174,11 +183,13 @@ const InformeLP: React.FC = () => {
             <button
               className="ilp-btn-nav ilp-btn-nav--finish"
               onClick={handleGenerate}
+              disabled={loading}
             >
-              Generar informe
+              {loading ? 'Generando...' : 'Generar informe'}
             </button>
           )}
         </nav>
+        <SuccessModal resultData={resultData} onClose={handleCloseModal} />
       </div>
     );
   }
@@ -226,17 +237,9 @@ const InformeLP: React.FC = () => {
           {error && (
             <p style={{ color: '#c0392b', marginTop: 8, fontSize: 14 }}>{error}</p>
           )}
-
-          {driveLink && (
-            <p style={{ marginTop: 10, fontSize: 14 }}>
-              ✅ Informe listo:{' '}
-              <a href={driveLink} target="_blank" rel="noreferrer">
-                Abrir en Google Drive
-              </a>
-            </p>
-          )}
         </div>
       </div>
+      <SuccessModal resultData={resultData} onClose={handleCloseModal} />
     </div>
   );
 };
