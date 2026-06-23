@@ -1,11 +1,20 @@
 import { httpClient } from './http.client';
 import { serialize } from 'object-to-formdata';
  
+export interface InformeBackendData {
+  id: number;
+  nrInf: string;
+  fecha: string;
+  url: string;
+  cliente: string;
+  googleDriveFileId: string;
+  userId: number;
+  user: any | null;
+}
+
 export interface InformeResult {
-  link:         string;   // webViewLink — para abrir en Drive
-  downloadLink: string;
-  fileId:       string;
-  fileName:     string;
+  message: string;
+  informe: InformeBackendData;
 }
  
 function toPascalCaseKeys(obj: any): any {
