@@ -18,9 +18,8 @@ import type { InformeDTO } from "../types/informe.types";
 import { INIT, SECTION_NAMES } from "../components/InformeLP/constantes";
 import { SuccessModal } from "../components/common/SuccessModal";
 
-import { useAuth } from '../context/auth.context';
-import { generarInforme } from '../service/informe.service';
 import type { InformeResult } from '../service/informe.service';
+import { useInformes } from '../hooks/useInformes';
 
 function createSectionSetter<K extends keyof InformeDTO>(
   setData: React.Dispatch<React.SetStateAction<InformeDTO>>,
@@ -48,10 +47,8 @@ const InformeLP: React.FC = () => {
   const [data, setData] = useState<InformeDTO>(INIT);
   const [step, setStep] = useState<number>(0);
   const [mobile, setMobile] = useState<boolean>(window.innerWidth < 768);
-  const { token } = useAuth();
-  const [loading,   setLoading]   = useState(false);
+  const { crearInforme, loading, error } = useInformes(false);
   const [resultData, setResultData] = useState<InformeResult | null>(null);
-  const [error,     setError]     = useState<string | null>(null);
 
   // Resize listener
   useEffect(() => {
@@ -103,22 +100,16 @@ const InformeLP: React.FC = () => {
   ];
 
   const handleGenerate = async () => {
-  if (!token) {
-    setError('No hay sesión activa');
-    return;
-  }
-  try {
-    setLoading(true);
-    setError(null);
-    setResultData(null);
-    const result = await generarInforme(data, token);
-    setResultData(result);
-  } catch (err) {
-    setError(err instanceof Error ? err.message : 'Error al generar el informe');
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      setResultData(null);
+      const result = await crearInforme(data);
+      if (result) {
+        setResultData(result);
+      }
+    } catch (err) {
+      console.error('Error al generar el informe', err);
+    }
+  };
 
   const handleCloseModal = () => {
     setResultData(null);
