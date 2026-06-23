@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
                             <option value="">Todos los creadores</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id.toString()}>
-                                    {user.nombre} {user.apellido}
+                                    {user.nombre}
                                 </option>
                             ))}
                         </select>
@@ -92,7 +92,7 @@ const HomePage: React.FC = () => {
                     <div className="home-cards">
                         {filteredInformes.map((informe) => {
                             const creator = informe.userId ? getUserById(informe.userId) : undefined;
-                            const creatorName = creator ? `${creator.nombre} ${creator.apellido}` : 'Usuario desconocido';
+                            const creatorName = creator ? creator.nombre : 'Usuario desconocido';
                             
                             return (
                                 <div key={informe.id} className="informe-card">
