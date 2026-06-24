@@ -45,17 +45,8 @@ function createSectionSetter<K extends keyof InformeDTO>(
 const InformeLP: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<InformeDTO>(INIT);
-  const [step, setStep] = useState<number>(0);
-  const [mobile, setMobile] = useState<boolean>(window.innerWidth < 768);
   const { crearInforme, loading, error } = useInformes(false);
   const [resultData, setResultData] = useState<InformeResult | null>(null);
-
-  // Resize listener
-  useEffect(() => {
-    const h = () => setMobile(window.innerWidth < 768);
-    window.addEventListener("resize", h);
-    return () => window.removeEventListener("resize", h);
-  }, []);
 
   const sections = [
     <DatosArchivo 
@@ -116,8 +107,8 @@ const InformeLP: React.FC = () => {
     navigate('/home');
   };
 
-  // ── HEADER (compartido) ─────────────────────────────────────────
-  const Header= () => (
+  // ── HEADER ──────────────────────────────────────────────────────
+  const Header = () => (
     <header className="ilp-header">
       <div className="ilp-header__bar" />
       <div>
@@ -127,65 +118,6 @@ const InformeLP: React.FC = () => {
     </header>
   );
 
-  // ── VISTA MOBILE ────────────────────────────────────────────────
-  if (mobile) {
-    const isFirst = step === 0;
-    const isLast = step === sections.length - 1;
-
-    return (
-      <div className="ilp-wrapper">
-        <Header />
-
-        <div className="ilp-mobile-step">
-          <span className="ilp-mobile-step__label">{SECTION_NAMES[step]}</span>
-          <span className="ilp-mobile-step__counter">{step + 1} / {sections.length}</span>
-        </div>
-
-      <div className="ilp-mobile-step__dots">
-        {sections.map((s, i) => (
-          <div key={i} id={`section-${i}`}>
-            {React.cloneElement(s, { numero: i + 1 })}
-          </div>
-        ))}
-        </div>
-
-        <div className="ilp-mobile-content">
-          {sections[step]}
-        </div>
-
-        <nav className="ilp-bottom-nav">
-          <button
-            className="ilp-btn-nav ilp-btn-nav--prev"
-            onClick={() => setStep((s) => Math.max(0, s - 1))}
-            disabled={isFirst}
-            aria-label="Sección anterior"
-          >
-            ←
-          </button>
-
-          {!isLast ? (
-            <button
-              className="ilp-btn-nav ilp-btn-nav--next"
-              onClick={() => setStep((s) => s + 1)}
-            >
-              Siguiente →
-            </button>
-          ) : (
-            <button
-              className="ilp-btn-nav ilp-btn-nav--finish"
-              onClick={handleGenerate}
-              disabled={loading}
-            >
-              {loading ? 'Generando...' : 'Generar informe'}
-            </button>
-          )}
-        </nav>
-        <SuccessModal resultData={resultData} onClose={handleCloseModal} />
-      </div>
-    );
-  }
-
-  // ── VISTA DESKTOP ───────────────────────────────────────────────
   return (
     <div className="ilp-wrapper">
       <Header />
