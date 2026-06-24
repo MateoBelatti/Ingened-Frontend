@@ -4,6 +4,7 @@ import { useAuth } from '../context/auth.context';
 import { useInformes } from '../hooks/useInformes';
 import { useUsers } from '../hooks/useUsers';
 import '../styles/pages/homePage.css'; 
+import { InformeCards } from '../components/common/InformeCards';
 
 const HomePage: React.FC = () => {
     const nav = useNavigate();
@@ -11,6 +12,8 @@ const HomePage: React.FC = () => {
     const { informes, loading: informesLoading } = useInformes(true);
     const { users, getUserById } = useUsers();
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+    const [areFiltersOpen, setAreFiltersOpen] = useState<boolean>(false);
     const [filtroCreador, setFiltroCreador] = useState<string>('');
     const [filtroFecha, setFiltroFecha] = useState<string>('');
     const [filtroCliente, setFiltroCliente] = useState<string>('');
@@ -33,26 +36,74 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="home-layout">
-            <aside className="home-sidebar">
+            <header className="mobile-header">
+                <button 
+                    className="btn-toggle-sidebar" 
+                    onClick={() => setIsSidebarOpen(true)}
+                    aria-label="Abrir menú"
+                >
+                    ☰
+                </button>
+                <span className="mobile-header-title">Ingened</span>
+                <div style={{ width: '24px' }}></div>
+            </header>
+
+            {isSidebarOpen && (
+                <div 
+                    className="sidebar-overlay" 
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
+            <aside className={`home-sidebar ${isSidebarOpen ? 'is-open' : ''}`}>
+                <button 
+                    className="btn-close-sidebar" 
+                    onClick={() => setIsSidebarOpen(false)}
+                    aria-label="Cerrar menú"
+                >
+                    ✕
+                </button>
                 <h2>Generar Informe</h2>
                 <div className="sidebar-buttons">
                     <button 
                         className="btn-sidebar"
-                        onClick={() => nav('/liquidosPenetrantes')}
+                        onClick={() => {
+                            setIsSidebarOpen(false);
+                            nav('/liquidosPenetrantes');
+                        }}
                     >
                         Líquidos Penetrantes
                     </button>
-                    <button className="btn-sidebar">
+                    <button 
+                        className="btn-sidebar"
+                        onClick={() => setIsSidebarOpen(false)}
+                    >
                         Próximo Ensayo
                     </button>
                 </div>
-                <button type="button" className="btn-logout" onClick={auth.logout}>
+                <button 
+                    type="button" 
+                    className="btn-logout" 
+                    onClick={() => {
+                        setIsSidebarOpen(false);
+                        auth.logout();
+                    }}
+                >
                     Salir
                 </button>
             </aside>
 
             <main className="home-main">
-                <div className="home-filters">
+                <button 
+                    className="btn-toggle-filters"
+                    onClick={() => setAreFiltersOpen(!areFiltersOpen)}
+                    aria-label="Toggle filtros"
+                >
+                    <span>🔍 Filtros</span>
+                    <span className={`arrow ${areFiltersOpen ? 'open' : ''}`}>▼</span>
+                </button>
+
+                <div className={`home-filters ${areFiltersOpen ? 'is-open' : ''}`}>
                     <div className="filter-group">
                         <label>Filtrar por Creador</label>
                         <select 
@@ -62,7 +113,7 @@ const HomePage: React.FC = () => {
                             <option value="">Todos los creadores</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id.toString()}>
-                                    {user.nombre} {user.apellido}
+                                    {user.nombre}
                                 </option>
                             ))}
                         </select>
@@ -86,39 +137,11 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
 
-                {informesLoading ? (
-                    <p style={{ color: 'var(--text-secondary)' }}>Cargando informes...</p>
-                ) : (
-                    <div className="home-cards">
-                        {filteredInformes.map((informe) => {
-                            const creator = informe.userId ? getUserById(informe.userId) : undefined;
-                            const creatorName = creator ? `${creator.nombre} ${creator.apellido}` : 'Usuario desconocido';
-                            
-                            return (
-                                <div key={informe.id} className="informe-card">
-                                    <div className="informe-card__title">
-                                        Informe N° {informe.nrInf}
-                                    </div>
-                                    <div className="informe-card__details">
-                                        <p><strong>Cliente:</strong> {informe.cliente}</p>
-                                        <p><strong>Fecha:</strong> {new Date(informe.fecha).toLocaleDateString()}</p>
-                                        <p><strong>Creado por:</strong> {creatorName}</p>
-                                        <p><strong>ID Archivo:</strong> {informe.googleDriveFileId || 'N/A'}</p>
-                                    </div>
-                                    {informe.url && (
-                                        <a href={informe.url} target="_blank" rel="noreferrer" className="informe-card__file">
-                                            <span className="informe-card__file-icon">📄</span>
-                                            Ver en Drive
-                                        </a>
-                                    )}
-                                </div>
-                            );
-                        })}
-                        {filteredInformes.length === 0 && (
-                            <p style={{ color: 'var(--text-secondary)' }}>No se encontraron informes con los filtros seleccionados.</p>
-                        )}
-                    </div>
-                )}
+                <InformeCards 
+                    loading={informesLoading}
+                    informes={filteredInformes}
+                    getUserById={getUserById}
+                />
             </main>
         </div>
     );
