@@ -1,5 +1,6 @@
 export type JwtPayload = {
     email: string;
+    exp?: number;
 };
 
 export type AuthContextType = {

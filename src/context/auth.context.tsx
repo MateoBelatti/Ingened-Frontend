@@ -18,7 +18,15 @@ const decodeJwt = (token: string): JwtPayload | null => {
         if (parts.length !== 3) return null;
         const payload = parts[1];
         const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-        return JSON.parse(decoded);
+        const parsed = JSON.parse(decoded) as JwtPayload;
+
+        // Si el token tiene una fecha de expiración, validamos que no haya vencido
+        if (parsed.exp && parsed.exp * 1000 < Date.now()) {
+            console.warn("El token JWT ha expirado.");
+            return null;
+        }
+
+        return parsed;
     } catch (error) {
         console.error("Error al decodificar JWT:", error);
         return null;
@@ -28,23 +36,48 @@ const decodeJwt = (token: string): JwtPayload | null => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<JwtPayload | null>(() => {
         const storedToken = localStorage.getItem("token");
-        return storedToken ? decodeJwt(storedToken) : null;
+        if (!storedToken) return null;
+        const decoded = decodeJwt(storedToken);
+        if (!decoded) {
+            localStorage.removeItem("token");
+            return null;
+        }
+        return decoded;
     });
     
-    const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
+    const [token, setToken] = useState<string | null>(() => {
+        const storedToken = localStorage.getItem("token");
+        if (!storedToken) return null;
+        const decoded = decodeJwt(storedToken);
+        if (!decoded) {
+            return null;
+        }
+        return storedToken;
+    });
     
     // Ahora validamos la sesión verificando que exista el email
     const isAuthenticated = !!user?.email;
 
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
-        if (!storedToken) return;
-
-        setToken(storedToken);
-        const decoded = decodeJwt(storedToken);
-        if (decoded) {
-            setUser(decoded);
+        if (storedToken) {
+            const decoded = decodeJwt(storedToken);
+            if (decoded) {
+                setToken(storedToken);
+                setUser(decoded);
+            } else {
+                logout();
+            }
         }
+
+        const handleAuthLogout = () => {
+            logout();
+        };
+
+        window.addEventListener("auth-logout", handleAuthLogout);
+        return () => {
+            window.removeEventListener("auth-logout", handleAuthLogout);
+        };
     }, []);
 
     const login = (newToken: string) => {
@@ -59,10 +92,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const logout = () => {
         localStorage.removeItem("token");
-
         setUser(null);
         setToken(null);
+        window.location.href = "/";
     };
+
 
     return (
         <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, setUser }}>
