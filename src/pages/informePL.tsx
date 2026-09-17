@@ -45,7 +45,7 @@ function createSectionSetter<K extends keyof InformeDTO>(
 const InformeLP: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<InformeDTO>(INIT);
-  const { crearInforme, loading, error } = useInformes(false);
+  const { crearInformeLp, loading, error } = useInformes(false);
   const [resultData, setResultData] = useState<InformeResult | null>(null);
 
   const sections = [
@@ -93,7 +93,7 @@ const InformeLP: React.FC = () => {
   const handleGenerate = async () => {
     try {
       setResultData(null);
-      const result = await crearInforme(data);
+      const result = await crearInformeLp(data);
       if (result) {
         setResultData(result);
       }

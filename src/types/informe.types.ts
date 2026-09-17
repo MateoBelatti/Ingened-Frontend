@@ -90,6 +90,7 @@ export interface RegistroFotograficoDataDto {
 }
 
 export interface InformeDTO {
+  tipo : string;
   datosArchivos: DatosArchivosDto;
   datosGenerales: DatosGeneralesDto;
   procedimientoNormas: ProcedimientoNormasDto;

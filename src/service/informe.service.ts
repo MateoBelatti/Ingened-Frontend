@@ -30,7 +30,7 @@ function toPascalCaseKeys(obj: any): any {
   return obj;
 }
 
-export const generarInforme = async (
+export const generarInformeLp = async (
   formData: object,
   token: string,
 ): Promise<InformeResult> => {
@@ -48,7 +48,7 @@ export const generarInforme = async (
     });
 
 
-    const res = await httpClient.post('/api/Informe/generarInforme', payload, {
+    const res = await httpClient.post('/api/Informe/lp', payload, {
       headers: { 
         Authorization: `Bearer ${token}`,
         'Content-Type': undefined
