@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getAllInformes, getInformeById, generarInforme } from '../service/informe.service';
+import { getAllInformes, getInformeById, generarInformeLp } from '../service/informe.service';
 import type { InformeBackendData, InformeResult } from '../service/informe.service';
 import { useAuth } from '../context/auth.context';
 
@@ -47,7 +47,7 @@ export const useInformes = (autoFetch: boolean = true) => {
     }
   }, [token]);
 
-  const crearInforme = async (formData: any): Promise<InformeResult | null> => {
+  const crearInformeLp = async (formData: any): Promise<InformeResult | null> => {
     if (!token) {
       setError('No hay sesión activa');
       return null;
@@ -56,7 +56,8 @@ export const useInformes = (autoFetch: boolean = true) => {
     try {
       setLoading(true);
       setError(null);
-      const result = await generarInforme(formData, token);
+      formData.append("Tipo", "LP");
+      const result = await generarInformeLp(formData, token);
       
       // Agregamos el informe generado a la lista local si existe
       if (result && result.informe) {
@@ -79,6 +80,6 @@ export const useInformes = (autoFetch: boolean = true) => {
     setInformes,
     fetchInformes,
     fetchInformeById,
-    crearInforme
+    crearInformeLp
   };
 };

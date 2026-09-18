@@ -30,7 +30,12 @@ httpClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Aquí puedes manejar errores globales, ej. desloguear si es 401
+    // Si la respuesta es 401 (No autorizado), deslogueamos al usuario
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token');
+      window.dispatchEvent(new Event('auth-logout'));
+    }
     return Promise.reject(error);
   }
 );
+
