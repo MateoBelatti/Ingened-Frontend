@@ -93,6 +93,7 @@ const InformeLP: React.FC = () => {
   const handleGenerate = async () => {
     try {
       setResultData(null);
+      data.tipo = "LP";
       const result = await crearInformeLp(data);
       if (result) {
         setResultData(result);
