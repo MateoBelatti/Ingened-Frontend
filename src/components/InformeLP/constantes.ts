@@ -15,6 +15,7 @@ export const SECTION_NAMES = [
 ];
 
 export const INIT: InformeDTO = {
+  tipo: "LP",
   datosArchivos: { nrInf: "", cliente: "", oc: "", rev: "", fecha: "", codigo: "" },
   datosGenerales: { proyecto: "", componente: "", subconjunto: "", obra: "", plano: "", posicion: "", lugar: "" },
   procedimientoNormas: { procGeneral: "", procEspecifico: "", ensayoTipo: "", norma: "", codigoRef: "" },

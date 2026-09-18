@@ -56,7 +56,6 @@ export const useInformes = (autoFetch: boolean = true) => {
     try {
       setLoading(true);
       setError(null);
-      formData.append("Tipo", "LP");
       const result = await generarInformeLp(formData, token);
       
       // Agregamos el informe generado a la lista local si existe
