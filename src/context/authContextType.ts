@@ -6,8 +6,9 @@ export type JwtPayload = {
 export type AuthContextType = {
     user: JwtPayload | null;
     token: string | null;
+    refreshToken: string | null;
     isAuthenticated: boolean;
-    login: (token: string) => void;
+    login: (accessToken: string, refreshToken: string) => void;
     logout: () => void;
     setUser: (user: JwtPayload | null) => void; 
 };
