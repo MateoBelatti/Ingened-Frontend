@@ -1,7 +1,7 @@
-import React, { type ChangeEvent } from "react";
-import { SCard } from "../primitivos"; // ajustá el path
+import React, { useState, type ChangeEvent } from "react";
+import { SCard } from "../primitivos";
 import { B, DARK } from "../constantes";
-
+import { ImageEditorModal } from "../../common/ImageEditorModal";
 import type { RegistroFotograficoDataDto } from "../../../types/informe.types";
 
 interface RegistroFotograficoProps {
@@ -14,6 +14,11 @@ export const RegistroFotografico: React.FC<RegistroFotograficoProps> = ({
   data,
   setData,
 }) => {
+  const [editingTarget, setEditingTarget] = useState<{
+    index: number;
+    file: File;
+  } | null>(null);
+
   const handleFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setData((prev) => ({
@@ -28,6 +33,19 @@ export const RegistroFotografico: React.FC<RegistroFotograficoProps> = ({
       ...prev,
       fotos: prev.fotos.filter((_, idx) => idx !== i),
     }));
+  };
+
+  const handleSaveEditedImage = (editedFile: File) => {
+    if (!editingTarget) return;
+    const { index } = editingTarget;
+
+    setData((prev) => {
+      const newFotos = [...prev.fotos];
+      newFotos[index] = editedFile;
+      return { ...prev, fotos: newFotos };
+    });
+
+    setEditingTarget(null);
   };
 
   return (
@@ -83,70 +101,131 @@ export const RegistroFotografico: React.FC<RegistroFotograficoProps> = ({
           style={{
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fill, minmax(110px, 1fr))",
-            gap: "0.6rem",
+              "repeat(auto-fill, minmax(130px, 1fr))",
+            gap: "0.75rem",
           }}
         >
-          {data.fotos.map((f, i) => (
-            <div
-              key={i}
-              style={{
-                borderRadius: 7,
-                overflow: "hidden",
-                border: "1px solid #dee2e6",
-                position: "relative",
-              }}
-            >
-              <img
-                src={URL.createObjectURL(f)}
-                alt={f.name}
-                style={{
-                  width: "100%",
-                  height: 90,
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-
-              <button
-                onClick={() => remove(i)}
-                style={{
-                  position: "absolute",
-                  top: 4,
-                  right: 4,
-                  background: "rgba(220,53,69,0.88)",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: 20,
-                  height: 20,
-                  color: "#fff",
-                  fontSize: "0.65rem",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 700,
-                }}
-              >
-                ✕
-              </button>
-
+          {data.fotos.map((f, i) => {
+            const imgUrl = URL.createObjectURL(f);
+            return (
               <div
+                key={i}
                 style={{
-                  padding: "3px 6px",
-                  fontSize: "0.62rem",
-                  color: "#6c757d",
-                  background: "#f8f9fa",
+                  borderRadius: 8,
                   overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  border: "1px solid #dee2e6",
+                  position: "relative",
+                  background: "#fff",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                {f.name}
+                {/* Image Container with click to edit */}
+                <div
+                  style={{
+                    position: "relative",
+                    height: 100,
+                    cursor: "pointer",
+                    overflow: "hidden",
+                    background: "#000",
+                  }}
+                  title="Haz clic para editar la foto"
+                  onClick={() => setEditingTarget({ index: i, file: f })}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={f.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+
+                  {/* Edit badge overlay */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      background: "rgba(0, 0, 0, 0.6)",
+                      color: "#fff",
+                      fontSize: "0.65rem",
+                      fontWeight: 600,
+                      textAlign: "center",
+                      padding: "3px 0",
+                      backdropFilter: "blur(2px)",
+                    }}
+                  >
+                    ✏️ Recortar / Girar
+                  </div>
+
+                  {/* Remove button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      remove(i);
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: 4,
+                      right: 4,
+                      background: "rgba(220,53,69,0.9)",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: 22,
+                      height: 22,
+                      color: "#fff",
+                      fontSize: "0.7rem",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: 700,
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+                    }}
+                    title="Eliminar foto"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Caption */}
+                <div
+                  style={{
+                    padding: "4px 6px",
+                    fontSize: "0.65rem",
+                    color: "#495057",
+                    background: "#f8f9fa",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    borderTop: "1px solid #f1f3f5",
+                    textAlign: "center",
+                  }}
+                  title={f.name}
+                >
+                  {f.name}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+      )}
+
+      {/* Modal editor */}
+      {editingTarget && (
+        <ImageEditorModal
+          file={editingTarget.file}
+          isOpen={!!editingTarget}
+          onClose={() => setEditingTarget(null)}
+          onSave={handleSaveEditedImage}
+        />
       )}
     </SCard>
   );

@@ -42,7 +42,7 @@ export const LoginForm: React.FC = () => {
     try {
       setIsLoading(true);
       const response = await loginService(formData);
-      auth?.login(response.token);
+      auth?.login(response.accessToken, response.refreshToken);
 
       setLoginSuccess(true);
       setTimeout(() => navigate("/home"), 1200);
@@ -64,7 +64,8 @@ export const LoginForm: React.FC = () => {
     try {
       setIsLoading(true);
       const result = await googleLoginService(credential);
-      auth?.login(result.token);
+      const accessToken = result.accessToken || result.token || "";
+      auth?.login(accessToken, result.refreshToken);
 
       setLoginSuccess(true);
       setTimeout(() => navigate("/home"), 1200);

@@ -93,8 +93,9 @@ const InformeLP: React.FC = () => {
   const handleGenerate = async () => {
     try {
       setResultData(null);
-      data.tipo = "LP";
-      const result = await crearInformeLp(data);
+      let payload : InformeDTO = data;
+      payload = {...data, tipo : "LP"} 
+      const result = await crearInformeLp(payload);
       if (result) {
         setResultData(result);
       }

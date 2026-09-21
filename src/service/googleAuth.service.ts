@@ -1,16 +1,18 @@
 /**
  * frontend/src/service/googleAuth.service.ts
  *
- * Envía el credential de Google al backend y recibe el JWT propio.
+ * Envía el credential de Google al backend y recibe el JWT propio y refreshToken.
  */
 
 import { httpClient } from './http.client';
 
 export interface GoogleLoginResult {
-  token:   string;
-  email:   string;
-  name?:   string;
-  message: string;
+  accessToken: string;
+  refreshToken: string;
+  token?: string;
+  email?: string;
+  name?: string;
+  message?: string;
 }
 
 export const googleLoginService = async (credential: string): Promise<GoogleLoginResult> => {
