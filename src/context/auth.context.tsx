@@ -54,7 +54,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         return storedToken;
     });
-    
+
+    const login = (newToken: string) => {
+        localStorage.setItem("token", newToken);
+        setToken(newToken);
+
+        const decoded = decodeJwt(newToken);
+        if (decoded) {
+            setUser(decoded);
+        }
+    };
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        setUser(null);
+        setToken(null);
+        window.location.href = "/";
+    };
+
     // Ahora validamos la sesión verificando que exista el email
     const isAuthenticated = !!user?.email;
 
@@ -80,22 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
     }, []);
 
-    const login = (newToken: string) => {
-        localStorage.setItem("token", newToken);
-        setToken(newToken);
 
-        const decoded = decodeJwt(newToken);
-        if (decoded) {
-            setUser(decoded);
-        }
-    };
-
-    const logout = () => {
-        localStorage.removeItem("token");
-        setUser(null);
-        setToken(null);
-        window.location.href = "/";
-    };
 
 
     return (
